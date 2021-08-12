@@ -20,7 +20,6 @@ public class BuscarBinarioController {
 
     @RequestMapping(value="/buscarBinario" , method = RequestMethod.POST, produces = {"application/json"},consumes = MediaType.APPLICATION_JSON_VALUE)
     public String postMethodName(@RequestBody String id) throws IOException {
-        //TODO: process POST request
         
        JSONObject numero = new BuscarBinario().buscarNumero(id);
        return numero.toString();
