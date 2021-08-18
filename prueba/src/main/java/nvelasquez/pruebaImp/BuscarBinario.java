@@ -1,23 +1,49 @@
 package nvelasquez.pruebaImp;
 
+import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Arrays;
+import java.nio.file.Path;
+
+
 
 public class BuscarBinario {
 
+    private static final int MAXIMO_BYTE_TARJETA = 8;
 
-    private static final int MAXIMO_BYTE_TARJETA = 9;
-    private static final byte MASK_FF = 0;
+    public  void buscarNumero (int numero) throws IOException{
+
+        Path path = Paths.get("C:/Users/nvelasquez/Desktop/prueba/prueba/src/main/resources/OperacionesBinarias.bin");
+        byte[] data = Files.readAllBytes(path);
+
+    
+
+            byte[] temp = Arrays.copyOfRange(data,0,0+8);
+
+
+            long numeroTarjeta = valor7bytesToInt(temp);
+
+            
+            System.out.print(numeroTarjeta);
+        
+
+        
+    }
+    
 
 
     /** Metodo que obtiene el numero en long de un arreglo de 7 bytes.
      * @param leido arreglo de byte leido con el numero de la tarjeta
      * @return numero de tarjeta
      * @throws TablasReferenciasException Arreglo debe ser de 7 bytes. */
-    public final long valor7bytesToInt(final byte[] leidoIn) throws TablasReferenciasException {
-        byte[] leido = Util.invertirCadena(leidoIn);
+    public final long valor7bytesToInt(final byte[] leidoIn)  {
+        byte[] leido = leidoIn;
+        reverse(leido);
         final int largoValor = MAXIMO_BYTE_TARJETA;
         if (leido.length != largoValor) {
-            throw new TablasReferenciasException("Arreglo debe ser de 7 bytes.");
+            System.out.print("Esto esta mal!!!!");
         }
         final byte largoLong = 8;
         byte[] bytes = new byte[largoLong];
@@ -32,46 +58,21 @@ public class BuscarBinario {
     }
 
 
-
-
-    /** Metodo que obtiene el numero en int de un arreglo de 2 bytes.
-     * @param leido arreglo de byte leido con el numero de la tarjeta
-     * @return codigo de producto
-     * @throws TablasReferenciasException TablasReferenciasException */
-    public static int valor2bytesToInt(final byte[] leidoIn) throws TablasReferenciasException {
-        byte[] leido = Util.invertirCadena(leidoIn);
-        final int largoValor = 2;
-        if (leido.length != largoValor) {
-            throw new TablasReferenciasException("Arreglo debe ser de 2 bytes.");
+    public static void reverse(byte[] array) {
+        if (array == null) {
+            return;
         }
-        final byte largoInt = 4;
-        byte[] bytes = new byte[largoInt];
-        final int indiceValor = 2;
-        bytes[indiceValor] = leido[0];
-        bytes[indiceValor + 1] = leido[1];
-        ByteBuffer byteBuffer = ByteBuffer.allocate(Integer.BYTES);
-        byteBuffer.put(bytes);
-        byteBuffer.flip();
-        return byteBuffer.getInt();
+        int i = 0;
+        int j = array.length - 1;
+        byte tmp;
+        while (j > i) {
+            tmp = array[j];
+            array[j] = array[i];
+            array[i] = tmp;
+            j--;
+            i++;
+        }
     }
 
 
-     /** Convierte un arreglo de bytes en un String con su correspondiente representacion hexadecimal.
-     * @param bytes arreglo de bytes que se desea representar en hexadecimal.
-     * @return String con la representacion hexadecimal, cada par de caracteres se retorna separado por espacios. */
-    public static String byteArrayToHexStringSinEspacios(final byte[] bytes) {
-        final int desplazamiento = 4;
-        char[] hexArray = "0123456789ABCDEF".toCharArray();
-        char[] hexChars = new char[bytes.length * 2];
-        for (int j = 0; j < bytes.length; j++) {
-            int v = bytes[j] & MASK_FF;
-            hexChars[j * 2] = hexArray[v >>> desplazamiento];
-            final int mascara = 0x0F;
-            hexChars[j * 2 + 1] = hexArray[v & mascara];
-        }
-        return new String(hexChars);
-    }
-
-
-    
 }
