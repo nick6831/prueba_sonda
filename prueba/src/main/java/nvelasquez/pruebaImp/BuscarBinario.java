@@ -3,33 +3,53 @@ package nvelasquez.pruebaImp;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
-import java.nio.file.Path;
+
+import org.json.JSONObject;
 
 
 
 public class BuscarBinario {
 
-    private static final int MAXIMO_BYTE_TARJETA = 8;
+    private static final int MAXIMO_BYTE_TARJETA = 7;
 
-    public  void buscarNumero (int numero) throws IOException{
+    public  JSONObject buscarNumero (String num) throws IOException{
+
+        JSONObject json = new JSONObject(num);  
+        long numero = json.getLong("id");
+        int numeroTransaccion = 0;
+        long numeroTarjeta = 0;
 
         Path path = Paths.get("C:/Users/nvelasquez/Desktop/prueba/prueba/src/main/resources/OperacionesBinarias.bin");
         byte[] data = Files.readAllBytes(path);
 
-    
+        for (int i = 0; i < data.length; i=i+9) {
+            
+        
+            byte[] temp = Arrays.copyOfRange(data,i,i+7);
 
-            byte[] temp = Arrays.copyOfRange(data,0,0+8);
+            numeroTarjeta = valor7bytesToInt(temp);
 
+            if(numero == numeroTarjeta){
 
-            long numeroTarjeta = valor7bytesToInt(temp);
+                byte[] temp2 = Arrays.copyOfRange(data,i+7,i+9);
+
+                numeroTransaccion = valor2bytesToInt(temp2);
+
+                break;
+
+            }
+            
+           
+        }
+
+            JSONObject jsonObject = new JSONObject("{tarjetaId:"+ numeroTarjeta +", transactionId:"+ numeroTransaccion+"}");
 
             
-            System.out.print(numeroTarjeta);
-        
 
-        
+            return jsonObject;
     }
     
 
@@ -55,6 +75,29 @@ public class BuscarBinario {
         buffer.put(bytes);
         buffer.flip(); // need flip
         return buffer.getLong();
+    }
+
+
+    /** Metodo que obtiene el numero en int de un arreglo de 2 bytes.
+     * @param leido arreglo de byte leido con el numero de la tarjeta
+     * @return codigo de producto
+     * @throws TablasReferenciasException TablasReferenciasException */
+    public static int valor2bytesToInt(final byte[] leidoIn){
+        byte[] leido = leidoIn;
+        reverse(leido);
+        final int largoValor = 2;
+        if (leido.length != largoValor) {
+            System.out.print("Esto esta mal!!!!");
+        }
+        final byte largoInt = 4;
+        byte[] bytes = new byte[largoInt];
+        final int indiceValor = 2;
+        bytes[indiceValor] = leido[0];
+        bytes[indiceValor + 1] = leido[1];
+        ByteBuffer byteBuffer = ByteBuffer.allocate(Integer.BYTES);
+        byteBuffer.put(bytes);
+        byteBuffer.flip();
+        return byteBuffer.getInt();
     }
 
 

@@ -5,7 +5,9 @@ import nvelasquez.pruebaImp.BuscarBinario;
 
 import java.io.IOException;
 
-import org.springframework.web.bind.annotation.PathVariable;
+import org.json.JSONObject;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,11 +18,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 public class BuscarBinarioController {
 
-    @RequestMapping(value="/buscarBinario/{id}" , method = RequestMethod.GET)
-    public void postMethodName(@PathVariable("id") int id) throws IOException {
+    @RequestMapping(value="/buscarBinario" , method = RequestMethod.POST, produces = {"application/json"},consumes = MediaType.APPLICATION_JSON_VALUE)
+    public String postMethodName(@RequestBody String id) throws IOException {
         //TODO: process POST request
         
-        new BuscarBinario().buscarNumero(id);
+       JSONObject numero = new BuscarBinario().buscarNumero(id);
+       return numero.toString();
 
     }
     
