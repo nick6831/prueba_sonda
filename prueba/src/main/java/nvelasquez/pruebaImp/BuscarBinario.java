@@ -24,31 +24,16 @@ public class BuscarBinario {
 
         Path path = Paths.get("C:/Users/nvelasquez/Desktop/prueba/prueba/src/main/resources/OperacionesBinarias.bin");
         byte[] data = Files.readAllBytes(path);
-
-        for (int i = 0; i < data.length; i=i+9) {
-            
-        
+        for (int i = 0; i < data.length; i=i+9) {        
             byte[] temp = Arrays.copyOfRange(data,i,i+7);
-
             numeroTarjeta = valor7bytesToInt(temp);
-
             if(numero == numeroTarjeta){
-
                 byte[] temp2 = Arrays.copyOfRange(data,i+7,i+9);
-
                 numeroTransaccion = valor2bytesToInt(temp2);
-
                 break;
-
-            }
-            
-           
+            }  
         }
-
             JSONObject jsonObject = new JSONObject("{tarjetaId:"+ numeroTarjeta +", transactionId:"+ numeroTransaccion+"}");
-
-            
-
             return jsonObject;
     }
     
